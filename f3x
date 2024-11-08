@@ -1,151 +1,165 @@
-local F3X = loadstring(game:HttpGet("https://pastebin.com/raw/TQgu7X5u"))()
-local e = game:GetObjects("rbxassetid://12739829493")[1]
-local PlacePart = Instance.new("Part", workspace)
-local pos = game.Players.LocalPlayer.Character.Head.CFrame.Position
-local x, y, z = math.floor(pos.X), math.floor(pos.Y), math.floor(pos.Z)
-
-PlacePart.Position = Vector3.new(x, y + 10, z)
-PlacePart.Name = "PlacePart"
-PlacePart.Size = Vector3.new(1, 1, 1)
-PlacePart.Anchored = true
-
-if workspace:FindFirstChild("PlacePart") then
-    e.Name = "AutoBuildModel"
-    e.Parent = workspace
-    e:MoveTo(workspace.PlacePart.Position)
+local Player = game.Players.LocalPlayer
+local serverEndpoint = Player.Character:FindFirstChild("ServerEndpoint", true) or Player:FindFirstChild("ServerEndpoint", true)
+local classNames = {Part = "Normal", TrussPart = "Truss", WedgePart = "Wedge", CornerWedgePart = "Corner", SpawnLocation = "Spawn"}
+local defaultProperties = {}
+local defaultPart = Instance.new("Part")
+local validMeshProperties = {"MeshType", "Scale", "Offset", "MeshId", "TextureId", "VertexColor"}
+local validPartProperties = {"Color", "Material", "Reflectance", "Transparency", "Anchored", "CanCollide", "Shape", "Size", "CFrame", "BackSurface", "BottomSurface", "FrontSurface", "LeftSurface", "RightSurface", "TopSurface"}
+local validTextureProperties = {Decal = {"Face", "Texture", "Transparency"}, Texture = {"Face", "Texture", "Transparency", "StudsPerTileU", "StudsPerTileV"}}
+local validDecorationProperties = {Smoke = {"Color", "Opacity", "Size", "RiseVelocity"}, Fire = {"Color", "SecondaryColor", "Heat", "Size"}, Sparkles = {"SparkleColor"}}
+local validLightingProperties = {SpotLight = {"Color", "Range", "Brightness", "Angle", "Face", "Shadows"}, PointLight = {"Color", "Range", "Brightness", "Shadows"}, SurfaceLight = {"Color", "Range", "Brightness", "Angle", "Face", "Shadows"}}
+for _,property in pairs(validPartProperties) do
+    defaultProperties[property] = defaultPart[property]
 end
-
-workspace.PlacePart:Destroy()
-
-local Value = 0
-
-for i, v in pairs(e:GetDescendants()) do
-    if v:IsA("BasePart") then
-        Value = Value + 1
-        v.Anchored = true
-    end
-end
-
-print("Amount Of Parts: "..Value)
-
-local children = e:GetDescendants()
-for i, child in ipairs(children) do
-    local success, message =
-        pcall(
-        function()
-            repeat
-                wait()
-            until child ~= nil
-
-            local AutoBuildPart = F3X.new(child.ClassName, workspace)
-
-            AutoBuildPart.CanCollide = child.CanCollide
-            AutoBuildPart.Reflectance = child.Reflectance
-            AutoBuildPart.Transparency = child.Transparency
-            AutoBuildPart.Material = child.Material
-            AutoBuildPart.Size = child.Size
-            AutoBuildPart.Color = child.Color
-            AutoBuildPart.Shape = child.Shape
-            AutoBuildPart.BackSurface = child.BackSurface
-            AutoBuildPart.BottomSurface = child.BottomSurface
-            AutoBuildPart.FrontSurface = child.FrontSurface
-            AutoBuildPart.LeftSurface = child.LeftSurface
-            AutoBuildPart.RightSurface = child.RightSurface
-            AutoBuildPart.TopSurface = child.TopSurface
-            AutoBuildPart.CFrame = child.CFrame
-            AutoBuildPart.Anchored = child.Anchored
-
-
-			if child:IsA("Mesh") then
-			local BuildPartMesh = AutoBuildPart:AddMesh() -- done
-            BuildPartMesh.MeshId = child:FindFirstChildOfClass("Mesh").MeshId
-            BuildPartMesh.MeshType = child:FindFirstChildOfClass("Mesh").MeshType
-            BuildPartMesh.Offset = child:FindFirstChildOfClass("Mesh").Offset
-            BuildPartMesh.Scale = child:FindFirstChildOfClass("Mesh").Scale
-            BuildPartMesh.TextureId = child:FindFirstChildOfClass("Mesh").TextureId
-            BuildPartMesh.Face = child:FindFirstChildOfClass("Mesh").Face
-            BuildPartMesh.VertexColor = child:FindFirstChildOfClass("Mesh").VertexColor
-			end
-			
-			if child:IsA("Texture") then
-			local BuildPartTexture = AutoBuildPart:AddTexture() -- done
-            BuildPartTexture.Face = child:FindFirstChildOfClass("Texture").Face
-            BuildPartTexture.Texture = child:FindFirstChildOfClass("Texture").Texture
-            BuildPartTexture.Transparency = child:FindFirstChildOfClass("Texture").Transparency
-            BuildPartTexture.StudsPerTileU = child:FindFirstChildOfClass("Texture").StudsPerTileU
-            BuildPartTexture.StudsPerTileV = child:FindFirstChildOfClass("Texture").StudsPerTileV
-			end
-			
-			if child:IsA("Decal") then
-			local BuildPartDecal = AutoBuildPart:AddDecal() -- done
-            BuildPartDecal.Face = child:FindFirstChildOfClass("Decal").Face
-            BuildPartDecal.Texture = child:FindFirstChildOfClass("Decal").Texture
-            BuildPartDecal.Transparency = child:FindFirstChildOfClass("Decal").Transparency
- 			end
- 			
- 			if child:IsA("Fire") then
- 			local BuildPartFire = AutoBuildPart:AddFire() -- done
-            BuildPartFire.Size = child:FindFirstChildOfClass("Fire").Size
-            BuildPartFire.Heat = child:FindFirstChildOfClass("Fire").Heat
-            BuildPartFire.Color = child:FindFirstChildOfClass("Fire").Color
-            BuildPartFire.SecondaryColor = child:FindFirstChildOfClass("Fire").SecondaryColor
-			end
-			
-			if child:IsA("Smoke") then
-			local BuildPartSmoke = AutoBuildPart:AddSmoke() -- done
-            BuildPartSmoke.Color = child:FindFirstChildOfClass("Smoke").Color
-            BuildPartSmoke.Opacity = child:FindFirstChildOfClass("Smoke").Opacity
-            BuildPartSmoke.Size = child:FindFirstChildOfClass("Smoke").Size
-            BuildPartSmoke.RiseVelocity = child:FindFirstChildOfClass("Smoke").RiseVelocity
-			end
-			
-			if child:IsA("Sparkles") then
-			local BuildPartSparkles = AutoBuildPart:AddSparkles() -- done
-            BuildPartSparkles.SparkleColor = child:FindFirstChildOfClass("Sparkles").SparkleColor
-			end
-			
-			if child:IsA("SpotLight") then
-			local BuildPartSpotLight = AutoBuildPart:AddSpotLight() -- done
-            BuildPartSpotLight.Color = child:FindFirstChildOfClass("SpotLight").Color
-            BuildPartSpotLight.Range = child:FindFirstChildOfClass("SpotLight").Range
-            BuildPartSpotLight.Brightness = child:FindFirstChildOfClass("SpotLight").Brightness
-            BuildPartSpotLight.Angle = child:FindFirstChildOfClass("SpotLight").Angle
-            BuildPartSpotLight.Face = child:FindFirstChildOfClass("SpotLight").Face
-            BuildPartSpotLight.Shadows = child:FindFirstChildOfClass("SpotLight").Shadows
-			end
-			
-			if child:IsA("PointLight") then
-			local BuildPartPointLight = AutoBuildPart:AddPointLight() -- done
-            BuildPartPointLight.Color = child:FindFirstChildOfClass("PointLight").Color
-            BuildPartPointLight.Range = child:FindFirstChildOfClass("PointLight").Range
-            BuildPartPointLight.Brightness = child:FindFirstChildOfClass("PointLight").Brightness
-            BuildPartPointLight.Shadows =  child:FindFirstChildOfClass("PointLight").Shadows
-			end
-			
-			if child:IsA("SurfaceLight") then
-			local BuildPartSurfaceLight = AutoBuildPart:AddSurfaceLight() -- done
-            BuildPartSurfaceLight.Color = child:FindFirstChildOfClass("SurfaceLight").Color
-            BuildPartSurfaceLight.Range = child:FindFirstChildOfClass("SurfaceLight").Range
-            BuildPartSurfaceLight.Brightness = child:FindFirstChildOfClass("SurfaceLight").Brightness
-            BuildPartSurfaceLight.Angle = child:FindFirstChildOfClass("SurfaceLight").Angle
-            BuildPartSurfaceLight.Face = child:FindFirstChildOfClass("SurfaceLight").Face
-            BuildPartSurfaceLight.Shadows = child:FindFirstChildOfClass("SurfaceLight").Shadows
-			end
-			
-			if child:IsA("Weld") then
-			local Part0 = child:FindFirstChildOfClass("Weld").Part0
-			local Part1 = child:FindFirstChildOfClass("Weld").Part1
-			AutoBuildPart:WeldTo(Part0, Part1)
-			end
-			
-            child:Destroy()
+defaultProperties.Parent = workspace
+defaultPart:Destroy()
+local F3X = {}
+function F3X.Object(object)
+    local properties = {}
+    if object:IsA("BasePart") then
+        for _,property in pairs(validPartProperties) do
+            properties[property] = object[property]
         end
-    )
-    if not success then
-        print("Object " .. child.Name .. " did an oopsie")
+    elseif object:IsA("SpecialMesh") then
+        for _,property in pairs(validMeshProperties) do
+            properties[property] = object[property]
+        end
+    elseif object:IsA("Decal") or object:IsA("Texture") then
+        for _,property in pairs(validTextureProperties[object.ClassName]) do
+            properties[property] = object[property]
+        end
+    elseif object:IsA("Fire") or object:IsA("Smoke") or object:IsA("Sparkles") then
+        for _,property in pairs(validDecorationProperties[object.ClassName]) do
+            properties[property] = object[property]
+        end
+    elseif object:IsA("SpotLight") or object:IsA("PointLight") or object:IsA("SurfaceLight") then
+        for _,property in pairs(validLightingProperties[object.ClassName]) do
+            properties[property] = object[property]
+        end
+    else
+        local proxy = newproxy(true)
+        local meta = getmetatable(proxy)
+        proxy.Object = object
+        function proxy:Destroy() serverEndpoint:InvokeServer("Remove", {object}) end
+        function proxy:Remove() serverEndpoint:InvokeServer("Remove", {object}) end
+        return proxy, object
+    end
+    for property,value in pairs(properties) do
+        object:GetPropertyChangedSignal(property):Connect(function()
+            properties[property] = object[property]
+        end)
+    end
+    local proxy = newproxy(true)
+    local meta = getmetatable(proxy)
+    meta.__index = properties
+    meta.__newindex = function(table, key, value)
+        properties[key] = value
+        local edited = {}
+        edited[key] = value
+        F3X.Edit(object, edited)
+    end
+    proxy.Object = object
+    if object:IsA("BasePart") then
+        function proxy:AddMesh() local mesh = serverEndpoint:InvokeServer("CreateMeshes", {{Part = object}})[1] return F3X.Object(mesh) end
+        function proxy:AddDecal() local decal = serverEndpoint:InvokeServer("CreateTextures", {{Part = object, Face = Enum.NormalId.Front, TextureType = "Decal"}})[1] return F3X.Object(decal) end
+        function proxy:AddTexture() local texture = serverEndpoint:InvokeServer("CreateTextures", {{Part = object, Face = Enum.NormalId.Front, TextureType = "Texture"}})[1] return F3X.Object(texture) end
+        function proxy:AddSmoke() local smoke = serverEndpoint:InvokeServer("CreateDecorations", {{Part = object, DecorationType = "Smoke"}})[1] return F3X.Object(smoke) end
+        function proxy:AddFire() local fire = serverEndpoint:InvokeServer("CreateDecorations", {{Part = object, DecorationType = "Fire"}})[1] return F3X.Object(fire) end
+        function proxy:AddSparkles() local sparkles = serverEndpoint:InvokeServer("CreateDecorations", {{Part = object, DecorationType = "Sparkles"}})[1] return F3X.Object(sparkles) end
+        function proxy:AddSpotLight() local spotlight = serverEndpoint:InvokeServer("CreateLights", {{Part = object, LightType = "SpotLight"}})[1] return F3X.Object(spotlight) end
+        function proxy:AddPointLight() local pointlight = serverEndpoint:InvokeServer("CreateLights", {{Part = object, LightType = "PointLight"}})[1] return F3X.Object(pointlight) end
+        function proxy:AddSurfaceLight() local pointlight = serverEndpoint:InvokeServer("CreateLights", {{Part = object, LightType = "surfacelight"}})[1] return F3X.Object(surfacelight) end
+        function proxy:WeldTo(parts) if type(parts) ~= "table" then parts = {parts} end serverEndpoint:InvokeServer("CreateWelds", parts, object) end
+        function proxy:MakeJoints() local parts = {} for _,part in pairs(object:GetTouchingParts()) do table.insert(parts, part) end serverEndpoint:InvokeServer("CreateWelds", parts, object) end
+        function proxy:BreakJoints() local welds = {} for _,weld in pairs(workspace:GetDescendants()) do if weld:IsA("Weld") and (weld.Part0 == object or weld.Part1 == object) then table.insert(welds, weld) end end serverEndpoint:InvokeServer("RemoveWelds", welds, object) end
+    end
+    function proxy:Destroy() serverEndpoint:InvokeServer("Remove", {object}) end
+    function proxy:Remove() serverEndpoint:InvokeServer("Remove", {object}) end
+    return proxy, object
+end
+
+function F3X.Edit(objects, properties)
+    if type(objects) ~= "table" then
+        objects = {objects}
+    end
+    for _,object in pairs(objects) do
+        spawn(function()
+            if object:IsA("BasePart") then
+                coroutine.wrap(serverEndpoint.InvokeServer)(serverEndpoint, "SyncAnchor", {{Part = object, Anchored = properties.Anchored}})
+                for property,value in pairs(properties) do
+                    if property == "BrickColor" then property = "Color" properties[property] = value.Color end
+                    if property == "Position" then property = "CFrame" properties[property] = CFrame.new(value) end
+                    local sync
+                    if property == "Material" or property == "Transparency" or property == "Reflectance" then
+                        sync = "SyncMaterial"
+                    elseif property:sub(property:len() - 6) == "Surface" then
+                        sync = "SyncSurface"
+                        property = property:gsub("Surface", "")
+                    elseif property == "Color" then
+                        sync = "SyncColor"
+                    elseif property == "Size" then
+                        sync = "SyncResize"
+                    elseif property == "CanCollide" then
+                        sync = "SyncCollision"
+                    elseif property == "Shape" then
+                        sync = "SyncShape"
+                    elseif property == "Name" then
+                        sync = "SetName"
+                    elseif property == "Parent" then
+                        sync = "SetParent"
+                    end
+                    local propertyTable = {Part = object}
+                    if sync == "SyncSurface" then
+                        propertyTable["Surfaces"] = {}
+                        propertyTable["Surfaces"][property] = value
+                    elseif sync == "SetName" or sync == "SetParent" then
+                        coroutine.wrap(serverEndpoint.InvokeServer)(serverEndpoint, sync, {object}, value)
+                    elseif property == "SyncShape" then
+                        local mesh = F3X.Object(object):AddMesh()
+                        local meshType
+                        if property.Name == "Ball" then meshType = "Sphere" end
+                        mesh.MeshType = Enum.MeshType[property.Name]
+                    else
+                        propertyTable[property] = value
+                    end
+                    coroutine.wrap(serverEndpoint.InvokeServer)(serverEndpoint, sync, {propertyTable})
+                end
+                if properties.CFrame ~= nil then
+                    coroutine.wrap(serverEndpoint.InvokeServer)(serverEndpoint, "SyncMove", {{Part = object, CFrame = properties.CFrame}})
+                end
+            elseif object:IsA("SpecialMesh") then
+                properties.Part = object.Parent
+                coroutine.wrap(serverEndpoint.InvokeServer)(serverEndpoint, "SyncMesh", {properties})
+            elseif object:IsA("Decal") or object:IsA("Texture") then
+                properties.Part = object.Parent
+                properties.TextureType = object.ClassName
+                coroutine.wrap(serverEndpoint.InvokeServer)(serverEndpoint, "SyncTexture", {properties})
+            elseif object:IsA("Fire") or object:IsA("Smoke") or object:IsA("Sparkles") then
+                properties.Part = object.Parent
+                properties.DecorationType = object.ClassName
+                coroutine.wrap(serverEndpoint.InvokeServer)(serverEndpoint, "SyncDecorate", {properties})
+            elseif object:IsA("SpotLight") or object:IsA("PointLight") or object:IsA("SurfaceLight") then
+                properties.Part = object.Parent
+                properties.LightType = object.ClassName
+                coroutine.wrap(serverEndpoint.InvokeServer)(serverEndpoint, "SyncLighting", {properties})
+            end
+        end)
     end
 end
 
-workspace.AutoBuildModel:Destroy()
+function F3X.new(className, parent)
+    for name,f3xname in pairs(classNames) do
+        if className == name then
+            className = f3xname
+        end
+    end
+    local properties = {}
+    for property,value in pairs(defaultProperties) do
+        properties[property] = value
+    end
+    local object = serverEndpoint:InvokeServer("CreatePart", className, CFrame.new(), parent)
+    F3X.Edit(object, defaultProperties)
+    return F3X.Object(object)
+end
 
-print("Finished!")
+return F3X
